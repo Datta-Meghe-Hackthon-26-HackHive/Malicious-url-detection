@@ -8,3 +8,4 @@ async def launch_browser():
     context = await browser.new_context()
     page = await context.new_page()
     return p, browser, context, page
+
