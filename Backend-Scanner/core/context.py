@@ -3,9 +3,9 @@
 
 from .browser import launch_browser
 from features.redirect_detector import detect_redirects
-# from scanner.features.network_monitor import monitor_network
+from features.network_monitor import monitor_network
 # from scanner.features.form_detector import detect_forms
-# from scanner.features.cookie_monitor import monitor_cookies
+from features.cookie_monitor import monitor_cookies
 # from scanner.features.content_analyzer import analyze_content
 
 async def scan_url(url: str):
@@ -15,19 +15,38 @@ async def scan_url(url: str):
     results = {}
 
     try:
-        await page.goto(url)
+        network_data = monitor_network(page)
+        cookies_data = monitor_cookies(page)
+
+        async def handle_route(route, request):
+            if request.resource_type in ["image", "media", "font"]:
+                await route.abort()
+            else:
+                await route.continue_()
+
+        await page.route("**/*", handle_route)
+
+        await page.goto(
+            url,
+            wait_until="domcontentloaded",
+            timeout=10000
+        )
 
         # Run feature 
-        results["redirects"] = await detect_redirects(page, url)
-        # results["network"] = await monitor_network(page, url)
+        results["redirects"] =await detect_redirects(page, url)
+        results["network"] = network_data
         # results["forms"] = await detect_forms(page, url)
-        # results["cookies"] = await monitor_cookies(page)
+        results["cookies"] = cookies_data
         # results["content"] = await analyze_content(page)
 
     except Exception as e:
         results["error"] = str(e)
 
     finally:
+        try:
+            await page.unroute("**/*")
+        except:
+            pass
         await context.close()
         await browser.close()
         await p.stop()

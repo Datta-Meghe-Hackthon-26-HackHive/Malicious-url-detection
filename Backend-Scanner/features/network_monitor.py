@@ -1,32 +1,31 @@
-# Here we will monitor and detect the network connection (POST,GET)
-# Assigned - Dhanasri
-from playwright.sync_api import sync_playwright
+from urllib.parse import urlparse
+import re
 
-def scan(url):
-    with sync_playwright() as p:
-        browser = p.chromium.launch(headless=False)
-        context = browser.new_context()
-        page = context.new_page()
+def monitor_network(page):
 
-        def handle_request(req):
-            method = req.method
-            request_url = req.url
+    result = {
+        "post_requests": 0,
+        "post_url":[],
+        "external_requests": [],
+        "ip_requests": [],
+    }
 
-            if method == "POST":
-                print("🔴 POST request sent to:", request_url)
+    def is_ip(domain):
+        return re.match(r"^\d+\.\d+\.\d+\.\d+$", domain)
 
-            elif method == "GET":
-                print("🟢 GET request:", request_url)
+    def handle_request(req):
+        method = req.method
+        request_url = req.url
+        domain = urlparse(request_url).netloc
 
-        page.on("request", handle_request)
+        if method == "POST":
+            result["post_requests"] += 1
+            result["post_url"].append(request_url)
 
-        page.goto(url, timeout=15000)
+        if is_ip(domain):
+            result["ip_requests"].append(request_url)
 
-        print("Title:", page.title())
+    page.on("request", handle_request)
 
-        input("Press Enter to close browser...")
-        browser.close()
+    return result
 
-if __name__ == "__main__":
-    url = input("Enter URL: ")
-    scan(url)
