@@ -7,28 +7,117 @@ import re
 # ===============================
 
 fraud_samples = [
-    "verify your bank account immediately",
-    "urgent action required update your password",
-    "claim your lottery prize now",
-    "send money to receive reward",
-    "your account has been suspended confirm now",
-    "click link to secure your payment",
-    "crypto transfer required to unlock funds",
+    # Credential theft
+    "verify your account immediately",
+    "confirm your password now",
+    "enter your otp to continue",
+    "security alert update your login details",
+    "your account has been suspended verify now",
     "confirm your debit card details",
-    "your account will be blocked today",
-    "payment verification needed urgently"
+    "provide your security code",
+    "verify your identity immediately",
+    "login attempt detected confirm now",
+    "reset your password urgently",
+
+    # Financial scams
+    "send money to receive reward",
+    "crypto transfer required to unlock funds",
+    "payment verification needed urgently",
+    "bank transfer required immediately",
+    "update your billing information",
+    "confirm your credit card number",
+    "transaction failed verify payment",
+    "wire transfer needed today",
+    "invoice overdue pay now",
+    "unauthorized transaction detected",
+
+    # Reward scams
+    "claim your lottery prize now",
+    "you are our lucky winner",
+    "congratulations you won a prize",
+    "claim your free gift immediately",
+    "bonus reward waiting for you",
+    "limited time cash reward",
+    "exclusive prize offer",
+    "win big today claim now",
+    "free vacation prize",
+    "reward expires today",
+
+    # Urgency pressure
+    "urgent action required update now",
+    "act fast limited time offer",
+    "final notice respond immediately",
+    "within 24 hours account blocked",
+    "last warning confirm now",
+    "immediate response required",
+    "time sensitive security alert",
+    "urgent verification needed",
+    "deadline today update details",
+    "critical account issue act now",
+
+    # Authority impersonation
+    "official notice from bank support",
+    "government department security alert",
+    "irs tax refund confirmation",
+    "tax department requires action",
+    "security team requesting verification",
+    "bank support urgent message",
+    "legal action will be taken",
+    "court notice payment required",
+    "police investigation warning",
+    "customs clearance payment required"
 ]
 
 safe_samples = [
-    "your order has been shipped",
-    "welcome to our website",
-    "meeting scheduled tomorrow",
-    "thank you for your purchase",
+    # Daily conversation
+    "let's have lunch tomorrow",
+    "meeting scheduled for friday",
     "happy birthday have a great day",
+    "how are you doing today",
+    "see you at the office",
+    "thank you for your help",
+    "please review the document",
+    "call me when available",
+    "project deadline extended",
+    "family dinner tonight",
+
+    # Work related
     "project report attached",
-    "let's meet at 5 pm",
-    "delivery expected tomorrow"
+    "team meeting agenda shared",
+    "client feedback received",
+    "presentation scheduled next week",
+    "budget approval confirmed",
+    "design update completed",
+    "testing phase started",
+    "deployment successful",
+    "code review comments added",
+    "performance metrics updated",
+
+    # E-commerce normal
+    "your order has been shipped",
+    "delivery expected tomorrow",
+    "tracking number attached",
+    "your purchase was successful",
+    "refund processed successfully",
+    "thank you for shopping with us",
+    "cart reminder notification",
+    "new product available",
+    "discount applied at checkout",
+    "invoice attached for your order",
+
+    # Casual
+    "see you soon",
+    "good morning",
+    "have a nice weekend",
+    "thank you very much",
+    "congratulations on your promotion",
+    "let me know your thoughts",
+    "can we reschedule the meeting",
+    "looking forward to hearing from you",
+    "attached is the file",
+    "please find the details below"
 ]
+
 
 texts = fraud_samples + safe_samples
 labels = [1]*len(fraud_samples) + [0]*len(safe_samples)

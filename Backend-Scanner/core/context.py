@@ -6,7 +6,7 @@ from features.redirect_detector import detect_redirects
 from features.network_monitor import monitor_network
 # from scanner.features.form_detector import detect_forms
 from features.cookie_monitor import monitor_cookies
-# from scanner.features.content_analyzer import analyze_content
+from features.text_analyzer.text_test import content_analyzer
 
 async def scan_url(url: str):
     # Launching the browser
@@ -34,10 +34,11 @@ async def scan_url(url: str):
 
         # Run feature 
         results["redirects"] =await detect_redirects(page, url)
+        results["content"] = await content_analyzer(page)
         results["network"] = network_data
         # results["forms"] = await detect_forms(page, url)
         results["cookies"] = cookies_data
-        # results["content"] = await analyze_content(page)
+        
 
     except Exception as e:
         results["error"] = str(e)
@@ -50,6 +51,7 @@ async def scan_url(url: str):
         await context.close()
         await browser.close()
         await p.stop()
-    
-    print(results)
+
+    results["url"] = url
+    # print(resuluts.get("cookies"))
     return results

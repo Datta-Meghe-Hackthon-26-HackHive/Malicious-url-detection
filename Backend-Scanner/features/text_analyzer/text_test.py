@@ -1,22 +1,32 @@
-from text_fraud_model import analyze_text
+from .text_fraud_model import analyze_text
 
-msg = input("Enter message text:\n")
+async def content_analyzer(page):
 
-risk, reasons, categories = analyze_text(msg)
+    result = {
+        "risk":0,
+        "category":"",
+        "reason":""
+    }
+    page_text = await page.evaluate("() => document.body.innerText")
+    risk, reasons, categories = analyze_text(page_text)
 
-print("\nFraud Probability:", round(risk,2))
+    result["category"]=categories
+    result["reason"]= reasons
+    result["risk"]=risk
 
-if risk > 0.75:
-    print("HIGH RISK — Scam likely")
-elif risk > 0.45:
-    print("⚠ Suspicious message")
-else:
-    print("Safe text")
+    return result
 
-print("\n Risk Categories:")
-for c in categories:
-    print("•", c)
+# if risk > 0.75:
+#     print("HIGH RISK — Scam likely")
+# elif risk > 0.45:
+#     print("⚠ Suspicious message")
+# else:
+#     print("Safe text")
 
-print("\n Reasons:")
-for r in reasons:
-    print("•", r)
+# print("\n Risk Categories:")
+# for c in categories:
+#     print("•", c)
+
+# print("\n Reasons:")
+# for r in reasons:
+#     print("•", r)
