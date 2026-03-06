@@ -16,6 +16,42 @@ import {
   Info
 } from "lucide-react";
 
+const backdata = {
+  "redirects": {
+    "redirect_chain": [
+      "https://www.youtube.com/",
+      "https://accounts.google.com/v3/signin/identifier?continue=https%3A%2F%2Fwww.youtube.com%2Fsignin%3Faction_handle_signin%3Dtrue%26app%3Ddesktop%26hl%3Den-GB%26next%3D%252Fsignin_passive%26feature%3Dpassive&dsh=S606704703%3A1772376160439029&hl=en-GB&ifkv=ASfE1-r4Eqzf-0ffTDjjjJ3ruyYoaMHY7-Uvzgm5aFaPO3cv7bTKfbkAQIpSa3nmregvON5huzG2Fg&passive=true&service=youtube&uilel=3&flowName=WebLiteSignIn&flowEntry=ServiceLogin"
+    ],
+    "cross_domain_content": false,
+    "cross_domain_list": [],
+    "redirect_len": "The page doesn't load third-party content."
+  },
+  "content": {
+    "risk": 0.5382137143734609,
+    "category": ["Safe"],
+    "reason": ["No fraud indicators detected"]
+  },
+  "network": {
+    "post_requests": 1,
+    "post_url": [
+      "https://www.youtube.com/youtubei/v1/guide?prettyPrint=false"
+    ],
+    "external_requests": [
+      "https://www.youtube.com/",
+      "https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=YouTube+Sans:wght@300..900&display=swap",
+      "https://i.ytimg.com/generate_204",
+      "https://accounts.google.com/ServiceLogin?service=youtube",
+      "https://fonts.gstatic.com/s/roboto/v51/KFO7CnqEu92Fr1ME7kSn66aGLdTylUAMa3yUBA.woff2",
+      "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_150x54dp.png"
+    ],
+    "ip_requests": []
+  },
+  "cookies": {
+    "Cookie_Stealing": []
+  },
+  "url": "https://www.youtube.com"
+}
+
 export default function PremiumLoadingPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [scanResult, setScanResult] = useState(null);
@@ -25,7 +61,7 @@ export default function PremiumLoadingPage() {
     const params = new URLSearchParams(window.location.search);
     const targetUrl = params.get('url') || 'https://example.com';
 
-    fetch('YOUR_BACKEND_API_URL/scan', {
+    fetch('http://localhost:8000/scan', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ url: targetUrl })
@@ -137,7 +173,7 @@ export default function PremiumLoadingPage() {
           
           {/* Left: Main Risk Score Card */}
           <div className="xl:col-span-2">
-            <div className="glass-card-strong rounded-3xl p-10 float-animation transition-all duration-300 hover:shadow-2xl bg-gradient-to-br from-white/75 via-white/70 to-blue-50/50">
+            <div className="glass-card-strong rounded-3xl p-10  duration-300 hover:shadow-2xl bg-gradient-to-br from-white/75 via-white/70 to-blue-50/50">
               <h2 className="text-3xl font-bold text-[#1E2A38] mb-8 text-center tracking-tight">Overall Risk Score</h2>
               
               {/* Risk Circle */}
@@ -169,8 +205,8 @@ export default function PremiumLoadingPage() {
 
               {/* Action Buttons */}
               <div className="space-y-3">
-                <Button 
-                  className="w-full h-14 text-base font-semibold bg-gradient-to-r from-[#4F8CFF] to-[#5AD7FF] hover:from-[#3D7AE6] hover:to-[#48C6EC] text-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2"
+                <Button onClick={() => window.location.href = "https://youtube.com"}
+                  className="w-full h-14 text-xl font-semibold bg-gradient-to-r from-[#4F8CFF] to-[#5AD7FF] hover:from-[#3D7AE6] hover:to-[#48C6EC] text-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2"
                 >
                   Continue to Website
                   <ArrowUpRight className="w-5 h-5" />
@@ -179,11 +215,12 @@ export default function PremiumLoadingPage() {
                 <div className="grid grid-cols-2 gap-3">
                   <Button 
                     variant="outline"
-                    className="h-12 text-sm font-semibold glass-card border-red-200 text-red-600 hover:bg-red-50 rounded-xl transition-all duration-300"
+                    className="h-12 text-medium font-semibold border-red-200 text-white bg-[#FF5A5F] hover:bg-[#FF5A5F]/90 hover:text-white rounded-xl transition-all duration-300"
                   >
+                    {/* Will Add Here The Database Connection */}
                     Report Issue
                   </Button>
-                  <Button 
+                  <Button onClick={()=>window.history.back()}
                     variant="outline"
                     className="h-12 text-sm font-semibold glass-card border-[#4F8CFF]/30 text-[#4F8CFF] hover:bg-blue-50 rounded-xl transition-all duration-300"
                   >
@@ -201,9 +238,9 @@ export default function PremiumLoadingPage() {
             <AnalysisCard
               icon={<FileText className="w-6 h-6" />}
               title="Content Analysis"
-              value={50}
-              tags={["Identity Theft", "Phishing Attempt", "Fake Rewards", "Data Harvesting"]}
-              description="Content analysis detected suspicious patterns commonly associated with phishing attempts."
+              value={(backdata.content.risk * 100).toFixed(1) }
+              tags={backdata.content.category}
+              description={backdata.content.reason}
               onViewReport={() => setReportOpen(true)}
             />
 
